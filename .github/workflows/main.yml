@@ -7,4 +7,37 @@ on:
 
 jobs:
   build:
-    runs-on:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "America/Denver"
+      - name: Checkout repository content
+        uses: actions/checkout@v2
+
+      -name: Setup Python Version
+       uses: actions/setup-python@v2
+       with:
+         python-version: 3.8 #Install updated python
+
+      -name: Install Python dependencies
+       uses: py-action/py-dependency-install@v2
+       with:
+         path: "requirements.txt"
+       
+       -name: Execute Python script
+        run: python Daily_WeatherNONinf.py
+
+
+        - name: Commit files
+          run: 
+            git config --local user.name DtaRprt
+            git config --local user.email "ben.mcclure@jacksonhole.com"
+            git add --all
+            git commit -am "Weather Updated as of $(date)"|
+            git push origin main
+          env:
+            REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+            username: github-actions
