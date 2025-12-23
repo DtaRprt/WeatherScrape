@@ -1,0 +1,10 @@
+name: BTAC Daily Scrape
+
+on:
+  schedule:
+  -cron:"0 0 6 * * ?"
+
+
+jobs:
+  build:
+    runs-on:
