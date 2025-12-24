@@ -2,42 +2,51 @@ name: BTAC Daily Scrape
 
 on:
   schedule:
-  -cron:"0 0 6 * * ?"
+    # 6:00 AM MST = 13:00 UTC
+    # (Minute Hour DayMonth Month DayWeek)
+    - cron: '0 13 * * *'
+  # Allows you to run it manually from the Actions tab for testing
+  workflow_dispatch:
 
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Set Timezone to Mountain Time
       - name: Set Timezone
         uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: "America/Denver"
-      - name: Checkout repository content
-        uses: actions/checkout@v2
 
-      -name: Setup Python Version
-       uses: actions/setup-python@v2
-       with:
-         python-version: 3.8 #Install updated python
+      # 2. Checkout the Code
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      -name: Install Python dependencies
-       uses: py-action/py-dependency-install@v2
-       with:
-         path: "requirements.txt"
-       
-       -name: Execute Python script
-        run: python Daily_WeatherNONinf.py
+      # 3. Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
 
+      # 4. Install Dependencies
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
 
-        - name: Commit files
-          run: 
-            git config --local user.name DtaRprt
-            git config --local user.email "ben.mcclure@jacksonhole.com"
-            git add --all
-            git commit -am "Weather Updated as of $(date)"|
-            git push origin main
-          env:
-            REPO_KEY: ${{secrets.GITHUB_TOKEN}}
-            username: github-actions
+      # 5. Run the Script
+      - name: Run Weather Scrape
+        run: |
+          python Daily_WeatherNONinf.py
+
+      # 6. Commit and Push
+      - name: Commit files
+        run: |
+          git config --local user.name "DtaRprt"
+          git config --local user.email "ben.mcclure@jacksonhole.com"
+          git add BTAC_History.csv
+          git commit -m "Weather Updated as of $(date)" || echo "No changes to commit"
+          git push
