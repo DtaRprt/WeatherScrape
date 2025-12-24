@@ -143,7 +143,13 @@ def process_data(json_payload, date_obj):
     return pd.DataFrame(extracted_rows)
 
 def main():
-    os.makedirs(os.path.dirname(CSV_FILE_PATH), exist_ok=True)
+    # --- FIX START ---
+    # Only try to create folders if the path actually has folders
+    directory = os.path.dirname(CSV_FILE_PATH)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    # --- FIX END ---
+
     write_log("Starting Daily Scrape...")
 
     data, date_obj = get_btac_data()
@@ -180,3 +186,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
