@@ -124,6 +124,7 @@ def process_data(json_payload, date_obj):
         if found_station:
             new_row = {
                 'ProphixDate': prophix_date,
+                'Date': date_obj.strftime('%Y-%m-%d'),
                 'Location': target_name,
                 
                 # Corrected Keys
@@ -158,7 +159,7 @@ def main():
         df_new = process_data(data, date_obj)
         
         if not df_new.empty:
-            cols = ['ProphixDate', 'Location', 'NewSno', 'SnoDepth', 'SnoFall Tot', 
+            cols = ['ProphixDate','Date', 'Location', 'NewSno', 'SnoDepth', 'SnoFall Tot', 
                     'Max Temp', 'Min Temp', 'AvgWind', 'MaxGust', 'TotalWind']
             
             for c in cols:
@@ -186,4 +187,5 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
