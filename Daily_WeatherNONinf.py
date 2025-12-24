@@ -5,7 +5,8 @@ import time
 import os
 
 # --- CONFIGURATION ---
-CSV_FILE_PATH = r"C:\Users\ben.mcclure\Documents\PythonSpread\BTAC_History.csv" 
+# Save directly to the current folder (repository root)
+CSV_FILE_PATH = "BTAC_History.csv"
 BASE_URL = "https://view.btjhwxavyproject.com/php-api/am_wx.php"
 
 # --- HELPER: LOGGING ---
@@ -177,4 +178,5 @@ def main():
         write_log("API request failed (Check internet or URL).")
 
 if __name__ == "__main__":
+
     main()
